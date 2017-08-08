@@ -1,4 +1,4 @@
-package wpaxos
+package paxi
 
 type Queue struct {
 	queue []interface{}

@@ -12,6 +12,7 @@ import (
 
 var n = flag.Int("n", 1, "N number of replicas, default value 1.")
 var protocol = flag.String("protocol", "wpaxos", "Consensus protocol name")
+var consistency = flag.Int("c", 1, "Consistency level")
 var F = flag.Int("f", 0, "failure per site")
 var Threshold = flag.Int("threshold", 0, "Threshold for leader change, 0 means immediate")
 var BackOff = flag.Int("backoff", 100, "Random backoff time")

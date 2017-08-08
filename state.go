@@ -1,6 +1,7 @@
 package paxi
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 	"sync"
@@ -12,6 +13,7 @@ var (
 
 type Key int64
 type Value int64
+type Version int
 
 const NIL Value = 0
 
@@ -43,27 +45,60 @@ func (c *Command) IsRead() bool {
 	return c.Operation == GET
 }
 
+// StateMachine maintains the multi-version key-value data store
 type StateMachine struct {
 	lock  *sync.Mutex
-	Store map[Key]Value
+	data  map[Key]map[Version]Value
+	data2 *MMap
+	data3 map[Key]*list.List
+	sync.RWMutex
 }
 
 func NewStateMachine() *StateMachine {
 	return &StateMachine{
 		lock:  new(sync.Mutex),
-		Store: make(map[Key]Value),
+		data:  make(map[Key]map[Version]Value),
+		data2: NewMMap(),
+		data3: make(map[Key]*list.List),
 	}
 }
 
+func versions(m map[Version]Value) []Version {
+	versions := make([]Version, len(m))
+	i := 0
+	for v := range m {
+		versions[i] = v
+		i++
+	}
+	return versions
+}
+
+func (s *StateMachine) maxVersion(key Key) Version {
+	max := 0
+	for v := range s.data[key] {
+		if int(v) >= max {
+			max = int(v)
+		}
+	}
+	return Version(max)
+}
+
 func (s *StateMachine) Execute(commands ...Command) (Value, error) {
+	s.Lock()
+	defer s.Unlock()
 	for _, c := range commands {
 		switch c.Operation {
 		case PUT:
-			s.Store[c.Key] = c.Value
+			if s.data[c.Key] == nil {
+				s.data[c.Key] = make(map[Version]Value)
+				s.data[c.Key][0] = NIL
+			}
+			v := s.maxVersion(c.Key) + 1
+			s.data[c.Key][v] = c.Value
 			return c.Value, nil
 		case GET:
-			if value, present := s.Store[c.Key]; present {
-				return value, nil
+			if value, present := s.data[c.Key]; present {
+				return value[s.maxVersion(c.Key)], nil
 			}
 		}
 	}

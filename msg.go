@@ -43,9 +43,37 @@ type Read struct {
 	Key       Key
 }
 
+func (r Read) String() string {
+	return fmt.Sprintf("Read {cid=%d, key=%d}", r.CommandID, r.Key)
+}
+
 type ReadReply struct {
 	CommandID CommandID
 	Value     Value
+}
+
+func (r ReadReply) String() string {
+	return fmt.Sprintf("ReadReply {cid=%d, val=%v}", r.CommandID, r.Value)
+}
+
+type Transaction struct {
+	CommandId CommandID
+	Commands  []Command
+	ClientID  ID
+	Timestamp int64
+}
+
+func (t Transaction) String() string {
+	return fmt.Sprintf("Transaction {cid=%d, cmds=%v, id=%s", t.CommandId, t.Commands, t.ClientID)
+}
+
+type TransactionReply struct {
+	OK        bool
+	CommandID CommandID
+	LeaderID  ID
+	ClientID  ID
+	Commands  []Command
+	Timestamp int64
 }
 
 /**************************

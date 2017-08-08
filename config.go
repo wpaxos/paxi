@@ -19,6 +19,8 @@ const (
 	WPaxos = iota
 	EPaxos
 	KPaxos
+	WanKeeper
+	Cosmos
 )
 
 type Config struct {
@@ -32,6 +34,7 @@ type Config struct {
 	ChanBufferSize int           `json:"chan_buffer_size"`
 	BufferSize     int           `json:"buffer_size"`
 	ConfigFile     string        `json:"file"`
+	Consistency    int
 	// Persistent     bool          `json:"persistent"`
 	// Transport      string        `json:"transport"`
 	// RecvRoutines   int           `json:"recv_routines"`
