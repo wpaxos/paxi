@@ -71,4 +71,5 @@ Each executable file expects some parameters which can be seen by `-help` flag, 
 
 
 ---
-A new version of Paxi project is also available in https://github.com/ailidani/paxi.
+A new version of Paxi project under heavy development is also available in https://github.com/ailidani/paxi.
+
