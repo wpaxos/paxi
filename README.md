@@ -68,3 +68,7 @@ Each executable file expects some parameters which can be seen by `-help` flag, 
 ```
 ./client -sid 1 -nid 1 -master 127.0.0.1 -T 10 -k 1000 -r 1 -c 50 -t 60 &
 ```
+
+
+---
+A new version of Paxi project is also available in https://github.com/ailidani/paxi.
