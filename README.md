@@ -1,4 +1,5 @@
 A new version of Paxi project is available in https://github.com/ailidani/paxi.
+
 ---
 
 ## What is WPaxos?
